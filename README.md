@@ -17,8 +17,8 @@ Features :
      Ou sites spécialisés : NASDAQ Composite, S&P 500. Scrape sur Yahoo Finance
 
 2. **Production :**
-  - Dataset : Données sur la production trimestrielle de Tesla.
-  - Features possibles : Capacité de production, taux d'utilisation des usines, nouveaux modèles lancés, etc.
+   - Dataset : Données sur la production trimestrielle de Tesla.
+   - Features possibles : Capacité de production, taux d'utilisation des usines, nouveaux modèles lancés, etc.
 
 3. **R&D et Innovation :**
    - Dataset : Dépenses en recherche et développement (R&D) de Tesla.
