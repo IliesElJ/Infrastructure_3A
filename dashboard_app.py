@@ -33,7 +33,13 @@ def fit_models(data):
     pc_regression_model = sm.OLS(y_train, sm.add_constant(X_train_pca)).fit()
 
     return xgb_model, lasso_model, pc_regression_model, X_test, y_test
+def shap_values(xgboost):
+    explainer = shap.Explainer(xgboost)
+    shap_values = explainer(X_test)
+    
+    # Calculate SHAP values - this might take some time for larger datasets
 
+    return shap.summary_plot(shap_values, X_test)
 # Function to retrieve log-likelihood results
 def get_log_likelihood_results(models, X_test, y_test):
     results = {}
@@ -135,6 +141,24 @@ def estimation_results_page(models, X_test, y_test):
     tmp_df = pd.DataFrame({'Predictions': predictions[best_model], 'Realized': y_test}).reset_index(drop=True)
     tmp_df.plot(ax=ax)
     st.pyplot(fig)
+
+# plot shap values for xgboost
+    st.write("Plotting Shap values for XgBoost:")
+    fig, ax = plt.subplots()
+    tmp_df = plot_shap_values(
+    tmp_df.plot(ax=ax)
+    st.pyplot(fig)
+
+
+    st.write('SHAP values for XgBoost')
+    explainer = shap.TreeExplainer(model['XGBoost'])
+    shap_values = explainer.shap_values(X_test)
+    pl.title('Assessing feature importance based on Shap values')
+    shap.summary_plot(shap_values,x_train,plot_type="bar",show=False)
+    st.pyplot(bbox_inches='tight')
+    pl.clf()
+
+
 
 # Main Streamlit App
 def main():
