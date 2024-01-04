@@ -9,6 +9,7 @@ import statsmodels.api as sm
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.metrics import r2_score
 
 github_url = 'https://github.com/IliesElJ/Infrastructure_3A/raw/florent/DataTesla.csv'
 df = pd.read_csv(github_url)
@@ -44,6 +45,9 @@ def get_log_likelihood_results(models, X_test, y_test):
             # Calculate likelihood 
             model_predictions = model.predict(X_test)
             mse = mean_squared_error(y_test, model_predictions)
+
+            r2 = r2_score(y_test, y_pred)
+            log = np.sqrt(mean_squared_error(y_test, y_pred)) 
             likelihood = -0.5 * len(y_test) * np.log(2 * np.pi * mse) - 0.5 * len(y_test)
             results[name] = likelihood
             predictions[name] = model_predictions
