@@ -9,16 +9,16 @@ import statsmodels.api as sm
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.metrics import r2_score
 
-github_url = 'https://github.com/IliesElJ/Infrastructure_3A/raw/florent/DataTesla.csv'
-df = pd.read_csv(github_url)
-data = df 
+df = pd.read_csv('DataTesla.csv')
+
 # Function to perform model fitting
 def fit_models(data):
-    X = data.drop('Tesla Stock Price', axis=1)
+    
+    print(data.columns)
+    
+    X = data.drop('Tesla Stock Price', axis=1).select_dtypes(np.number)
     y = data['Tesla Stock Price']
-    df=data
 
     # Split data
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
@@ -33,13 +33,7 @@ def fit_models(data):
     pc_regression_model = sm.OLS(y_train, sm.add_constant(X_train_pca)).fit()
 
     return xgb_model, lasso_model, pc_regression_model, X_test, y_test
-def shap_values(xgboost):
-    explainer = shap.Explainer(xgboost)
-    shap_values = explainer(X_test)
-    
-    # Calculate SHAP values - this might take some time for larger datasets
 
-    return shap.summary_plot(shap_values, X_test)
 # Function to retrieve log-likelihood results
 def get_log_likelihood_results(models, X_test, y_test):
     results = {}
@@ -52,9 +46,6 @@ def get_log_likelihood_results(models, X_test, y_test):
             # Calculate likelihood 
             model_predictions = model.predict(X_test)
             mse = mean_squared_error(y_test, model_predictions)
-
-            r2 = r2_score(y_test, y_pred)
-            log = np.sqrt(mean_squared_error(y_test, y_pred)) 
             likelihood = -0.5 * len(y_test) * np.log(2 * np.pi * mse) - 0.5 * len(y_test)
             results[name] = likelihood
             predictions[name] = model_predictions
@@ -139,26 +130,8 @@ def estimation_results_page(models, X_test, y_test):
     st.write("Plotting Predictions for the Best Model:")
     fig, ax = plt.subplots()
     tmp_df = pd.DataFrame({'Predictions': predictions[best_model], 'Realized': y_test}).reset_index(drop=True)
-    tmp_df.plot(ax=ax)
-    st.pyplot(fig)
-
-# plot shap values for xgboost
-    st.write("Plotting Shap values for XgBoost:")
-    fig, ax = plt.subplots()
-    tmp_df = plot_shap_values(
-    tmp_df.plot(ax=ax)
-    st.pyplot(fig)
-
-
-    st.write('SHAP values for XgBoost')
-    explainer = shap.TreeExplainer(model['XGBoost'])
-    shap_values = explainer.shap_values(X_test)
-    pl.title('Assessing feature importance based on Shap values')
-    shap.summary_plot(shap_values,x_train,plot_type="bar",show=False)
-    st.pyplot(bbox_inches='tight')
-    pl.clf()
-
-
+#     tmp_df.plot(ax=ax)
+    st.line_chart(tmp_df)
 
 # Main Streamlit App
 def main():
@@ -168,11 +141,11 @@ def main():
     if page == "Data Visualization":
         data_visualization_page()
     elif page == "Estimation Results":
+        filtered_data = pd.read_csv('DataTesla.csv')
         xgb_model, lasso_model, pc_regression_model, X_test, y_test = fit_models(filtered_data)
         models = {'XGBoost': xgb_model, 'Lasso': lasso_model, 'PC Regression': pc_regression_model}
         estimation_results_page(models, X_test, y_test)
 
 if __name__ == "__main__":
     main()
-
 
