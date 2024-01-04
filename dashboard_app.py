@@ -18,6 +18,7 @@ data = df
 def fit_models(data):
     X = data.drop('Tesla Stock Price', axis=1)
     y = data['Tesla Stock Price']
+    df=data
 
     # Split data
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
