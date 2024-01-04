@@ -135,7 +135,7 @@ def estimation_results_page(models, X_test, y_test):
     st.line_chart(tmp_df)
 
     st.write('Shap Value for XgBoost')
-    explainer = shap.TreeExplainer(models['XGBoost'))
+    explainer = shap.TreeExplainer(models['XGBoost'])
     shap_values = explainer.shap_values(X_test)
     pl.title('Assessing feature importance based on Shap values')
     shap.summary_plot(shap_values,x_train,plot_type="bar",show=False)
@@ -157,4 +157,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
