@@ -9,6 +9,7 @@ import statsmodels.api as sm
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import numpy as np
+import shap
 
 df = pd.read_csv('DataTesla.csv')
 
@@ -132,6 +133,14 @@ def estimation_results_page(models, X_test, y_test):
     tmp_df = pd.DataFrame({'Predictions': predictions[best_model], 'Realized': y_test}).reset_index(drop=True)
 #     tmp_df.plot(ax=ax)
     st.line_chart(tmp_df)
+
+    st.write('Shap Value for XgBoost')
+    explainer = shap.TreeExplainer(models['XGBoost'))
+    shap_values = explainer.shap_values(X_test)
+    pl.title('Assessing feature importance based on Shap values')
+    shap.summary_plot(shap_values,x_train,plot_type="bar",show=False)
+    st.pyplot(bbox_inches='tight')
+    pl.clf()
 
 # Main Streamlit App
 def main():
