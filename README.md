@@ -1,4 +1,6 @@
-![](sticker.png)
+<p align="center">
+  <img src="sticker.png" alt="Image Description">
+</p>
 
 # Présentation du Projet
 
