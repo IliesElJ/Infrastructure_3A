@@ -10,7 +10,9 @@ from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import numpy as np
 import shap
-df = pd.read_csv('DataTesla.csv')
+
+st.set_option('deprecation.showPyplotGlobalUse', False)
+df = pd.read_csv('datasets/DataTesla.csv')
 
 
 # Function to perform model fitting
@@ -192,7 +194,12 @@ def estimation_results_page(models, X_test, y_test):
 
     # Display the results
     st.write("Log-Likelihood Results:")
-    st.write("La vraisemblance mesure à quel point un modèle spécifique est probable ou plausible étant donné les données observées. En utilisant la vraisemblance, on peut comparer différents modèles pour voir lequel correspond le mieux à la réalité complexe des données. Un modèle avec une forte vraisemblance capte les nuances et les tendances cachées dans les données, permettant ainsi des prédictions plus précises et fiables. Cet outil statistique est d’autant plus important pour la finance car les modèles déterminent les décisions d’investissement. ")
+    st.write("La vraisemblance mesure à quel point un modèle spécifique est probable ou plausible étant donné les données "
+        "observées. En utilisant la vraisemblance, on peut comparer différents modèles pour voir lequel correspond le "
+        "mieux à la réalité complexe des données. Un modèle avec une forte vraisemblance capte les nuances et les "
+        "tendances cachées dans les données, permettant ainsi des prédictions plus précises et fiables. Cet outil "
+        "statistique est d’autant plus important pour la finance car les modèles déterminent les décisions "
+        "d’investissement.")
     st.table(pd.DataFrame([results], index=['Log vraisemblance']))
 
     # Display the best model
