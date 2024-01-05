@@ -12,6 +12,7 @@ import numpy as np
 import shap
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
+name_1, name_2, name_3, name_4, name_5 = "Thomas", "Arthur", "Ilies", "Ismaïl", "Florent"
 df = pd.read_csv('datasets/DataTesla.csv')
 
 
@@ -35,6 +36,28 @@ def fit_models(data):
     return xgb_model, lasso_model, pc_regression_model, X_test, y_test
 
 
+# Introductory text
+st.markdown(f"""
+# Bienvenue sur notre Dashboard!
+
+Ce projet Python d'Infrastructures et Systèmes Logiciels a été réalisé avec passion et dévouement par notre équipe 
+dynamique composé de **{name_1}**, **{name_2}**, **{name_3}**, **{name_4}** et **{name_5}**.
+
+Nous sommes fiers de vous présenter notre travail sur l'analyse des données de Tesla. Ce dashboard interactif vous 
+permet d'explorer diverses métriques financières, de décès, et des données Twitter liées à Tesla, ainsi que les 
+résultats de nos modèles prédictifs. 
+
+Plongez dans l'univers des données et découvrez les insights cachés derrière les chiffres!
+
+---
+
+**Instructions:**
+Utilisez la barre latérale pour naviguer à travers les différentes sections du dashboard et interagir avec les visualisations.
+
+Bonne exploration!
+""", unsafe_allow_html=True)
+
+
 # Function to retrieve log-likelihood results
 def get_log_likelihood_results(models, X_test, y_test):
     results = {}
@@ -53,6 +76,8 @@ def get_log_likelihood_results(models, X_test, y_test):
 
     return results, predictions
 
+
+st.sidebar.image("sticker.png", use_column_width=True)
 
 # Sidebar with filters
 st.sidebar.title("Filtres")
@@ -79,12 +104,10 @@ filtered_data = df[selected_financial_metrics + selected_death_metrics + selecte
 
 # Page for Data Visualization
 def data_visualization_page():
-
     # Financial Metrics
     for metric in selected_financial_metrics:
+        st.title("Visualisation des données temporelles")
         if metric in selected_financial_metrics:
-            st.title("Visualisation des données temporelles")
-
             fig_financial = go.Figure()
             fig_financial.add_trace(go.Scatter(x=df['Date'], y=df[metric], mode='lines', name=metric))
             fig_financial.update_layout(title=f"Évolution de {metric} au fil du temps", xaxis_title="Date",
@@ -98,7 +121,7 @@ def data_visualization_page():
 
     # Plot all selected Death Metrics
     if selected_death_metrics:
-        st.title("Évolution des décès et de l'activité Twitter normalisée")
+        st.title("Évolution des décès liés au accidents")
         fig_deaths = go.Figure()
         for metric in selected_death_metrics:
             normalized_metric = metric + ' (normalized)'
@@ -114,6 +137,7 @@ def data_visualization_page():
 
     # Normalize and plot all selected Twitter Metrics
     if selected_twitter_metrics:
+        st.title("Évolution de l'activité Twitter normalisée")
         fig_twitter = go.Figure()
         for metric in selected_twitter_metrics:
             normalized_metric = metric + ' (normalized)'
@@ -186,61 +210,81 @@ def plot_markdown(metrics, nombre=None):
 
 # Page for Estimation Results
 def estimation_results_page(models, x_test, y_test):
-    st.title("Estimation Results")
+    if not models:
+        # Display a blank page with a gentle prompt
+        st.write("Veuillez sélectionner des modèles pour afficher les résultats.")
+        return
+
+    st.title("Résultats d'Estimation")
 
     # Retrieve log-likelihood results
     results, predictions = get_log_likelihood_results(models, x_test, y_test)
 
-    # Display the results
-    st.write("Log-Likelihood Results:")
-    st.write(
-        "La vraisemblance mesure à quel point un modèle spécifique est probable ou plausible étant donné les données "
-        "observées. En utilisant la vraisemblance, on peut comparer différents modèles pour voir lequel correspond le "
-        "mieux à la réalité complexe des données. Un modèle avec une forte vraisemblance capte les nuances et les "
-        "tendances cachées dans les données, permettant ainsi des prédictions plus précises et fiables. Cet outil "
-        "statistique est d’autant plus important pour la finance car les modèles déterminent les décisions "
-        "d’investissement. ")
-    st.write(results)
+    # Display the results using Markdown for better formatting
+    st.markdown("""
+    ### Résultats de la Vraisemblance Logarithmique
+
+    La vraisemblance mesure à quel point un modèle spécifique est probable ou plausible étant donné les données 
+    observées. En utilisant la vraisemblance, on peut comparer différents modèles pour voir lequel correspond le 
+    mieux à la réalité complexe des données. Un modèle avec une forte vraisemblance capte les nuances et les 
+    tendances cachées dans les données, permettant ainsi des prédictions plus précises et fiables. Cet outil 
+    statistique est d’autant plus important pour la finance car les modèles déterminent les décisions 
+    d’investissement.
+    """, unsafe_allow_html=True)
+
+    st.table(pd.DataFrame([results], index=['Log vraisemblance']))
 
     # Display the best model
     best_model = pd.Series(results).idxmax()
     best_llf = pd.Series(results).max()
-    st.write(f'Best model is: {best_model} with Log-likelihood of: {best_llf}')
+    st.markdown(f"**Le modèle {best_model} est le plus performant** avec une log-vraisemblance de {round(best_llf, 5)}.")
 
     # Plot predictions for the best model
-    st.write("Plotting Predictions for the Best Model:")
+    st.markdown("#### Graphe des Prédictions vs Valeurs Réalisées")
     fig, ax = plt.subplots()
     tmp_df = pd.DataFrame({'Predictions': predictions[best_model], 'Realized': y_test}).reset_index(drop=True)
     st.line_chart(tmp_df)
 
     # SHAP values
-    st.title('Analyse valeurs SHAP')
+    st.title('Analyse des Valeurs SHAP')
     explainer = shap.TreeExplainer(models['XGBoost'])
     shap_values = explainer.shap_values(x_test)
-    st.write(
-        "Les valeurs SHAP permettent de décomposer la contribution de chaque caractéristique (comme le prix du "
-        "pétrole, les tweets, etc.) à la prédiction finale. Les valeurs SHAP nous aident à comprendre non seulement "
-        "quelles données sont les plus importantes, mais aussi comment elles s'assemblent pour prédire le prix. Cette "
-        "compréhension fine permet aux analystes de mieux interpréter les prédictions de leur modèle. Les valeurs de "
-        "SHAP sont propres au modèle, une même variable peut avoir une valeur SHAP différentes selon le modèle ou les "
-        "composants de la régression. Ainsi, les valeurs SHAP permettent d’affiner la compréhension de notre modèle.")
+    st.markdown("""
+    Les valeurs SHAP permettent de décomposer la contribution de chaque caractéristique (comme le prix du 
+    pétrole, les tweets, etc.) à la prédiction finale. Les valeurs SHAP nous aident à comprendre non seulement 
+    quelles données sont les plus importantes, mais aussi comment elles s'assemblent pour prédire le prix. Cette 
+    compréhension fine permet aux analystes de mieux interpréter les prédictions de leur modèle. Les valeurs de 
+    SHAP sont propres au modèle, une même variable peut avoir une valeur SHAP différentes selon le modèle ou les 
+    composants de la régression. Ainsi, les valeurs SHAP permettent d’affiner la compréhension de notre modèle.
+    """)
 
     # Feature Importance Plot
-    st.write('Feature Importance based on SHAP values')
+    st.markdown('#### Importance des Caractéristiques Basée sur les Valeurs SHAP')
     shap.summary_plot(shap_values, x_test, plot_type="bar")
     st.pyplot(bbox_inches='tight')
     plt.clf()
 
     # Summary Plot
-    st.write('Summary Plot of SHAP values')
+    st.markdown('#### Résumé des Valeurs SHAP')
     shap.summary_plot(shap_values, x_test)
     st.pyplot(bbox_inches='tight')
     plt.clf()
 
     # Dependence Plot for a specific feature
     feature_names = x_test.columns.tolist()  # List of feature names
-    selected_feature = st.selectbox('Select a feature for the Dependence Plot', feature_names)
-    st.write(f'Dependence Plot for {selected_feature}')
+    st.markdown("""
+    #### Plot de Dépendance SHAP
+
+    Ce graphique représente un **plot de dépendance SHAP**. Les plots de dépendance SHAP montrent l'effet qu'une seule 
+    caractéristique du dataset a sur la **prédiction du modèle**. Chaque point sur le graphique représente une observation. 
+    L'axe horizontal représente la **valeur de la caractéristique**, tandis que l'axe vertical montre **l'impact de cette 
+    caractéristique sur la prédiction du modèle**. En d'autres termes, cela nous aide à comprendre comment la valeur d'une 
+    caractéristique spécifique influence la sortie du modèle. C'est un outil puissant pour **l'interprétation des modèles 
+    de machine learning**, offrant une compréhension plus profonde des relations entre les caractéristiques et les 
+    prédictions du modèle.
+    """, unsafe_allow_html=True)
+    selected_feature = st.selectbox('Sélectionner un élément pour le graphe de dépendance', feature_names)
+    st.markdown(f'#### Dependence Plot pour {selected_feature}')
     shap.dependence_plot(selected_feature, shap_values, x_test)
     st.pyplot(bbox_inches='tight')
     plt.clf()
