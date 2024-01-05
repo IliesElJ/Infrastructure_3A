@@ -137,18 +137,24 @@ def data_visualization_page():
 
     # Normalize and plot all selected Twitter Metrics
     if selected_twitter_metrics:
+        print("Selected Twitter Metrics:", selected_twitter_metrics)  # Debug print
         st.title("Évolution de l'activité Twitter normalisée")
         fig_twitter = go.Figure()
         for metric in selected_twitter_metrics:
-            normalized_metric = metric + ' (normalized)'
             max_value = df[metric].max()
+            print(f"Max value for {metric}: {max_value}")  # Debug print
             if max_value != 0:
+                normalized_metric = metric + ' (normalized)'
                 normalized_data[normalized_metric] = df[metric] / max_value
                 fig_twitter.add_trace(go.Scatter(x=df['Date'], y=normalized_data[normalized_metric], mode='lines',
                                                  name=normalized_metric))
-            st.write(plot_markdown(metric))
+            else:
+                print(f"Skipped {metric} due to zero max value")  # Debug print
+                
+        st.write(plot_markdown(metric))
         fig_twitter.update_layout(title="Évolution de l'activité Twitter normalisée au fil du temps",
                                   xaxis_title="Date", yaxis_title="Valeur normalisée")
+        st.plotly_chart(fig_twitter)
 
 
 def plot_markdown(metrics, nombre=None):
