@@ -126,7 +126,7 @@ def data_visualization_page():
                                   xaxis_title="Date", yaxis_title="Valeur normalisée")
 
 
-def plot_markdown(metrics):
+def plot_markdown(metrics, nombre=None):
     a = None
     if metrics == 'Tesla Stock':
         a = "Tesla est un pionnier dans le domaine des véhicules électriques. Chaque avancée technologique, " \
@@ -157,7 +157,7 @@ def plot_markdown(metrics):
             "Tesla, en tant que leader dans ce domaine, se trouve souvent au centre de ces discussions, ce qui peut " \
             "affecter la confiance des investisseurs et donc la valorisation boursière de l'entreprise. La manière " \
             "dont Tesla répond à ces défis, par des améliorations de sécurité et une communication transparente, " \
-            "est donc cruciale pour maintenir la confiance et stabiliser son action en bourse. (Les lag correspondent " \ 
+            "est donc cruciale pour maintenir la confiance et stabiliser son action en bourse. (Les lag correspondent " \
             "au nombre de mort pas jour, par semaine et par mois) "
 
     elif metrics == 'Tweets of Elon Musk':
