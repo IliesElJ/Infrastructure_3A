@@ -10,7 +10,6 @@ from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import numpy as np
 import shap
-
 df = pd.read_csv('DataTesla.csv')
 
 
@@ -177,7 +176,7 @@ def plot_markdown(metrics):
             "négative ou mitigée sur les réseaux sociaux, particulièrement en réponse à des controverses ou des " \
             "défis, peut susciter des inquiétudes chez les investisseurs et peser sur la valeur de l'action. Ces " \
             "données permettent donc de mieux appréhender les évènements de haute volatilité tout aussi bien que " \
-            "le ressenti de l’opinion public. "
+            "le ressenti de l’opinion public pour Tesla. "
 
     return a
 
@@ -194,7 +193,7 @@ def estimation_results_page(models, X_test, y_test):
     # Display the results
     st.write("Log-Likelihood Results:")
     st.write("La vraisemblance mesure à quel point un modèle spécifique est probable ou plausible étant donné les données observées. En utilisant la vraisemblance, on peut comparer différents modèles pour voir lequel correspond le mieux à la réalité complexe des données. Un modèle avec une forte vraisemblance capte les nuances et les tendances cachées dans les données, permettant ainsi des prédictions plus précises et fiables. Cet outil statistique est d’autant plus important pour la finance car les modèles déterminent les décisions d’investissement. ")
-    st.write(results)
+    st.table(pd.DataFrame([results], index=['Log vraisemblance']))
 
     # Display the best model
     best_model = pd.Series(results).idxmax()
@@ -229,7 +228,8 @@ def estimation_results_page(models, X_test, y_test):
     feature_names = X_test.columns.tolist()  # List of feature names
     selected_feature = st.selectbox('Select a feature for the Dependence Plot', feature_names)
     st.write(f'Dependence Plot for {selected_feature}')
-    st.write("Le graphe de dépendance, dans l'analyse des valeurs SHAP, joue un rôle crucial pour dévoiler les dynamiques sous-jacentes d'une caractéristique spécifique sur les prédictions du modèle. Ce type de graphique montre comment la prédiction change avec différentes valeurs de cette caractéristique, mais révèle aussi comment l'effet de cette caractéristique est modifié en présence d'autres variables. En observant ce graphe, on peut détecter des modèles de comportement, tels que des tendances, des seuils ou des points d'inflexion, qui peuvent indiquer des interactions importantes ou des effets non linéaires.")
+    st.write("Le graphe de dépendance, dans l'analyse des valeurs SHAP, joue un rôle crucial pour dévoiler les dynamiques sous-jacentes d'une caractéristique spécifique sur les prédictions du modèle. Ce type de graphique montre comment la prédiction change avec différentes valeurs de cette caractéristique, mais révèle aussi comment l'effet de cette caractéristique est modifié en présence d'autres variables. En observant ce graphique, on peut détecter des modèles de comportement, tels que des tendances, des seuils ou des points d'inflexion, qui peuvent indiquer des interactions importantes ou des effets non linéaires.")
+
     shap.dependence_plot(selected_feature, shap_values, X_test)
     st.pyplot(bbox_inches='tight')
     plt.clf()
