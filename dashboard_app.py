@@ -79,11 +79,12 @@ filtered_data = df[selected_financial_metrics + selected_death_metrics + selecte
 
 # Page for Data Visualization
 def data_visualization_page():
-    st.title("Visualisation des données temporelles")
 
     # Financial Metrics
     for metric in selected_financial_metrics:
         if metric in selected_financial_metrics:
+            st.title("Visualisation des données temporelles")
+
             fig_financial = go.Figure()
             fig_financial.add_trace(go.Scatter(x=df['Date'], y=df[metric], mode='lines', name=metric))
             fig_financial.update_layout(title=f"Évolution de {metric} au fil du temps", xaxis_title="Date",
@@ -93,11 +94,11 @@ def data_visualization_page():
             st.write(plot_markdown(metric))
 
     # Deaths and Tweets Normalization and Plotting
-    st.title("Évolution des décès et de l'activité Twitter normalisée")
     normalized_data = pd.DataFrame()
 
     # Plot all selected Death Metrics
     if selected_death_metrics:
+        st.title("Évolution des décès et de l'activité Twitter normalisée")
         fig_deaths = go.Figure()
         for metric in selected_death_metrics:
             normalized_metric = metric + ' (normalized)'
