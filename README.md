@@ -39,6 +39,9 @@ Après la collecte de divers ensembles de données, le projet passe à l'étape 
 ### Classe ModelFitter
 Une classe Python dédiée, `ModelFitter`, a été créée pour faciliter le test de plusieurs modèles prédictifs. La classe inclut plusieurs modèles tels que OLS, RandomForest, PC Regression, Lasso et XGBoost.
 
+Voila un diagramme representant son fonctionnement:
+![Diagramme du projet](modelfitter.png)
+
 ## 4. Visualisation
 
 Le fichier `dashboard_app.py` se concentre sur la création de représentations visuelles informatives des données :
@@ -67,4 +70,27 @@ Le fichier `dashboard_app.py` se concentre sur la création de représentations 
 4. **Visualisation :**
    - Executer le fichier `dashboard_app.py`.
    - Exécutez les scripts ou notebooks de visualisation pour générer des graphiques et des diagrammes.
+
+### Docker
+
+#### Construction et Exécution avec Docker
+
+Pour construire et exécuter l'application `shapontesla` en utilisant Docker, suivez ces étapes :
+
+#### Construire l'Image Docker
+
+Dans le terminal, naviguez jusqu'au dossier contenant le `Dockerfile` et exécutez :
+
+```bash
+docker build -t shapontesla .
+```
+
+Cette commande crée une image Docker nommée shapontesla. Pour démarrer l'application dans un conteneur Docker, utilisez :
+
+```bash
+docker run -p 8501:8501 shapontesla
+```
+
+L'application sera accessible à [http://localhost:8501](http://localhost:8501). 
+L'application est aussi déployée sur 
 

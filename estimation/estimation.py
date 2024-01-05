@@ -12,7 +12,51 @@ import statsmodels.api as sm
 
 
 class ModelFitter:
+    """
+    A class used to fit various statistical and machine learning models to a given dataset.
+
+    Attributes
+    ----------
+    best_llf : float
+        The best log-likelihood value obtained from the fitted models.
+    best_model : str
+        The name of the best performing model based on log-likelihood.
+    data : DataFrame
+        The dataset used for model fitting.
+    target : str
+        The name of the target variable in the dataset.
+    models : dict
+        A dictionary to store instances of different models.
+    results : dict
+        A dictionary to store the results (log-likelihood values) of the fitted models.
+    predictions : dict
+        A dictionary to store the predictions made by each model.
+    target_test : Series
+        The test target data.
+
+    Methods
+    -------
+    fit_models():
+        Fits a range of models to the data and stores their results and predictions.
+    get_results():
+        Returns the results of the model fitting.
+    retrieve_max_llf_model():
+        Identifies and prints the model with the highest log-likelihood.
+    plot_predictions():
+        Plots the predictions of the models.
+    """
+
     def __init__(self, data, target):
+        """
+        Constructs all the necessary attributes for the ModelFitter object.
+
+        Parameters
+        ----------
+        data : DataFrame
+            The dataset to be used for model fitting.
+        target : str
+            The name of the target variable in the dataset.
+        """
         self.best_llf = None
         self.best_model = None
         self.data = data
@@ -29,6 +73,13 @@ class ModelFitter:
         self.target_test = {}
 
     def fit_models(self):
+        """
+        Fits various models to the dataset and stores their results and predictions.
+
+        The method splits the data into training and test sets, fits different models,
+        and calculates the log-likelihood for each model. It stores the fitted models,
+        their predictions, and the log-likelihood values.
+        """
         X = self.data.drop(self.target, axis=1)
         y = self.data[self.target]
 
@@ -61,15 +112,36 @@ class ModelFitter:
                 self.predictions[name] = predictions
 
     def get_results(self):
+        """
+        Returns the results of the fitted models.
+
+        Returns
+        -------
+        dict
+            A dictionary containing the log-likelihood values of the fitted models.
+        """
         return self.results
 
     def retrieve_max_llf_model(self):
+        """
+        Identifies the best performing model based on log-likelihood.
+
+        This method finds the model with the highest log-likelihood value and updates
+        the best_model and best_llf attributes accordingly. It also prints the name
+        of the best model and its log-likelihood.
+        """
         results = self.get_results()
         self.best_model = pd.Series(results).idxmax()
         self.best_llf = pd.Series(results).max()
         print(f'Best model is: {self.best_model} with Log-likelihood of: {self.best_llf}')
 
     def plot_predictions(self):
+        """
+        Plots the predictions made by each model.
+
+        This method generates a plot for each model's predictions against the actual
+        values. It raises an exception if called before models are fitted.
+        """
 
         if not hasattr(self, 'best_model'):
             raise Exception("Model not fitted")
