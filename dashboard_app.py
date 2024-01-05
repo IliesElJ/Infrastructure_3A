@@ -146,8 +146,9 @@ def plot_markdown(metrics):
         
     
 
+
 # Page for Estimation Results
-def estimation_results_page(models, X_test, y_test):
+def estimation_results_page(models, X_test, y_test, xgb_model):
     st.title("Estimation Results")
 
     # Retrieve log-likelihood results
@@ -166,8 +167,32 @@ def estimation_results_page(models, X_test, y_test):
     st.write("Plotting Predictions for the Best Model:")
     fig, ax = plt.subplots()
     tmp_df = pd.DataFrame({'Predictions': predictions[best_model], 'Realized': y_test}).reset_index(drop=True)
-#     tmp_df.plot(ax=ax)
     st.line_chart(tmp_df)
+    
+    # SHAP values
+    st.title('SHAP Values Analysis')
+    explainer = shap.TreeExplainer(xgb_model)
+    shap_values = explainer.shap_values(X_test)
+
+    # Feature Importance Plot
+    st.write('Feature Importance based on SHAP values')
+    shap.summary_plot(shap_values, X_test, plot_type="bar")
+    st.pyplot(bbox_inches='tight')
+    plt.clf()
+
+    # Summary Plot
+    st.write('Summary Plot of SHAP values')
+    shap.summary_plot(shap_values, X_test)
+    st.pyplot(bbox_inches='tight')
+    plt.clf()
+
+    # Dependence Plot for a specific feature
+    feature_names = X_test.columns.tolist()  # List of feature names
+    selected_feature = st.selectbox('Select a feature for the Dependence Plot', feature_names)
+    st.write(f'Dependence Plot for {selected_feature}')
+    shap.dependence_plot(selected_feature, shap_values, X_test)
+    st.pyplot(bbox_inches='tight')
+    plt.clf()
 
 # Main Streamlit App
 def main():
