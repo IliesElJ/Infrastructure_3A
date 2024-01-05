@@ -181,6 +181,17 @@ def plot_markdown(metrics):
     return a
 
 
+        
+def plot_markdown_estimaton(metrics):
+    a = None
+    if metrics == 'Tesla Stock':
+        a = "La vraisemblance mesure à quel point un modèle spécifique est probable ou plausible étant donné les données observées. En utilisant la vraisemblance, on peut comparer différents modèles pour voir lequel correspond le mieux à la réalité complexe des données. Un modèle avec une forte vraisemblance capte les nuances et les tendances cachées dans les données, permettant ainsi des prédictions plus précises et fiables. Cet outil statistique est d’autant plus important pour la finance car les modèles déterminent les décisions d’investissement. "
+
+    if metrics == 'Tesla Stock':
+        a = " Les valeurs SHAP permettent de décomposer la contribution de chaque caractéristique (comme le prix du pétrole, les tweets, etc.) à la prédiction finale. Les valeurs SHAP nous aident à comprendre non seulement quelles données sont les plus importantes, mais aussi comment elles s'assemblent pour prédire le prix. Cette compréhension fine permet aux analystes de mieux interpréter les prédictions de leur modèle. Les valeurs de SHAP sont propres au modèle, une même variable peut avoir une valeur SHAP différentes selon le modèle ou les composants de la régression. Ainsi, les valeurs SHAP permettent d’affiner la compréhension de notre modèle.
+"
+        return a
+
 # Page for Estimation Results
 def estimation_results_page(models, X_test, y_test):
     st.title("Estimation Results")
@@ -199,10 +210,34 @@ def estimation_results_page(models, X_test, y_test):
 
     # Plot predictions for the best model
     st.write("Plotting Predictions for the Best Model:")
+    fig, ax = plt.subplots()
     tmp_df = pd.DataFrame({'Predictions': predictions[best_model], 'Realized': y_test}).reset_index(drop=True)
-    #     tmp_df.plot(ax=ax)
     st.line_chart(tmp_df)
+    
+    # SHAP values
+    st.title('SHAP Values Analysis')
+    explainer = shap.TreeExplainer(models['XGBoost'])
+    shap_values = explainer.shap_values(X_test)
 
+    # Feature Importance Plot
+    st.write('Feature Importance based on SHAP values')
+    shap.summary_plot(shap_values, X_test, plot_type="bar")
+    st.pyplot(bbox_inches='tight')
+    plt.clf()
+
+    # Summary Plot
+    st.write('Summary Plot of SHAP values')
+    shap.summary_plot(shap_values, X_test)
+    st.pyplot(bbox_inches='tight')
+    plt.clf()
+
+    # Dependence Plot for a specific feature
+    feature_names = X_test.columns.tolist()  # List of feature names
+    selected_feature = st.selectbox('Select a feature for the Dependence Plot', feature_names)
+    st.write(f'Dependence Plot for {selected_feature}')
+    shap.dependence_plot(selected_feature, shap_values, X_test)
+    st.pyplot(bbox_inches='tight')
+    plt.clf()
 
 # Main Streamlit App
 def main():
