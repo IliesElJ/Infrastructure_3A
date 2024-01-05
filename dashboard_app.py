@@ -205,7 +205,7 @@ def estimation_results_page(models, X_test, y_test):
     st.write("Plotting Predictions for the Best Model:")
     fig, ax = plt.subplots()
     tmp_df = pd.DataFrame({'Predictions': predictions[best_model], 'Realized': y_test}).reset_index(drop=True)
-    st.line_chart(tmp_df)
+    st.table(tmp_df)
     
     # SHAP values
     st.title('Analyse valeurs SHAP')
