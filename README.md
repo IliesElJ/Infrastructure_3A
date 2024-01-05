@@ -2,6 +2,9 @@
 
 Le projet est un outil d'analyse et de prévision complet pour les cours de l'action Tesla. Il est structuré en trois parties principales, chacune contribuant à l'objectif global de comprendre et de prédire le comportement des actions.
 
+![Diagramme du projet](diagramme.png)
+
+
 ## 1. Extraction de Données
 
 Dans le dossier `Processing`, vous trouverez la première étape du projet, qui consiste à extraire des données essentielles de différentes sources :
