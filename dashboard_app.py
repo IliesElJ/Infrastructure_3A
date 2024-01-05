@@ -126,7 +126,7 @@ def data_visualization_page():
                                   xaxis_title="Date", yaxis_title="Valeur normalisée")
 
 
-def plot_markdown(metrics):
+def plot_markdown(metrics, nombre=None):
     a = None
     if metrics == 'Tesla Stock':
         a = "Tesla est un pionnier dans le domaine des véhicules électriques. Chaque avancée technologique, " \
@@ -183,24 +183,23 @@ def plot_markdown(metrics):
     return a
 
 
-
-
 # Page for Estimation Results
-def estimation_results_page(models, X_test, y_test):
+def estimation_results_page(models, x_test, y_test):
     st.title("Estimation Results")
 
     # Retrieve log-likelihood results
-    results, predictions = get_log_likelihood_results(models, X_test, y_test)
+    results, predictions = get_log_likelihood_results(models, x_test, y_test)
 
     # Display the results
     st.write("Log-Likelihood Results:")
-    st.write("La vraisemblance mesure à quel point un modèle spécifique est probable ou plausible étant donné les données "
+    st.write(
+        "La vraisemblance mesure à quel point un modèle spécifique est probable ou plausible étant donné les données "
         "observées. En utilisant la vraisemblance, on peut comparer différents modèles pour voir lequel correspond le "
         "mieux à la réalité complexe des données. Un modèle avec une forte vraisemblance capte les nuances et les "
         "tendances cachées dans les données, permettant ainsi des prédictions plus précises et fiables. Cet outil "
         "statistique est d’autant plus important pour la finance car les modèles déterminent les décisions "
-        "d’investissement.")
-    st.table(pd.DataFrame([results], index=['Log vraisemblance']))
+        "d’investissement. ")
+    st.write(results)
 
     # Display the best model
     best_model = pd.Series(results).idxmax()
@@ -212,34 +211,39 @@ def estimation_results_page(models, X_test, y_test):
     fig, ax = plt.subplots()
     tmp_df = pd.DataFrame({'Predictions': predictions[best_model], 'Realized': y_test}).reset_index(drop=True)
     st.line_chart(tmp_df)
-    
+
     # SHAP values
     st.title('Analyse valeurs SHAP')
     explainer = shap.TreeExplainer(models['XGBoost'])
-    shap_values = explainer.shap_values(X_test)
-    st.write(" Les valeurs SHAP permettent de décomposer la contribution de chaque caractéristique (comme le prix du pétrole, les tweets, etc.) à la prédiction finale. Les valeurs SHAP nous aident à comprendre non seulement quelles données sont les plus importantes, mais aussi comment elles s'assemblent pour prédire le prix. Cette compréhension fine permet aux analystes de mieux interpréter les prédictions de leur modèle. Les valeurs de SHAP sont propres au modèle, une même variable peut avoir une valeur SHAP différentes selon le modèle ou les composants de la régression. Ainsi, les valeurs SHAP permettent d’affiner la compréhension de notre modèle.")
+    shap_values = explainer.shap_values(x_test)
+    st.write(
+        "Les valeurs SHAP permettent de décomposer la contribution de chaque caractéristique (comme le prix du "
+        "pétrole, les tweets, etc.) à la prédiction finale. Les valeurs SHAP nous aident à comprendre non seulement "
+        "quelles données sont les plus importantes, mais aussi comment elles s'assemblent pour prédire le prix. Cette "
+        "compréhension fine permet aux analystes de mieux interpréter les prédictions de leur modèle. Les valeurs de "
+        "SHAP sont propres au modèle, une même variable peut avoir une valeur SHAP différentes selon le modèle ou les "
+        "composants de la régression. Ainsi, les valeurs SHAP permettent d’affiner la compréhension de notre modèle.")
 
     # Feature Importance Plot
     st.write('Feature Importance based on SHAP values')
-    shap.summary_plot(shap_values, X_test, plot_type="bar")
+    shap.summary_plot(shap_values, x_test, plot_type="bar")
     st.pyplot(bbox_inches='tight')
     plt.clf()
 
     # Summary Plot
     st.write('Summary Plot of SHAP values')
-    shap.summary_plot(shap_values, X_test)
+    shap.summary_plot(shap_values, x_test)
     st.pyplot(bbox_inches='tight')
     plt.clf()
 
     # Dependence Plot for a specific feature
-    feature_names = X_test.columns.tolist()  # List of feature names
+    feature_names = x_test.columns.tolist()  # List of feature names
     selected_feature = st.selectbox('Select a feature for the Dependence Plot', feature_names)
     st.write(f'Dependence Plot for {selected_feature}')
-    st.write("Le graphe de dépendance, dans l'analyse des valeurs SHAP, joue un rôle crucial pour dévoiler les dynamiques sous-jacentes d'une caractéristique spécifique sur les prédictions du modèle. Ce type de graphique montre comment la prédiction change avec différentes valeurs de cette caractéristique, mais révèle aussi comment l'effet de cette caractéristique est modifié en présence d'autres variables. En observant ce graphique, on peut détecter des modèles de comportement, tels que des tendances, des seuils ou des points d'inflexion, qui peuvent indiquer des interactions importantes ou des effets non linéaires.")
-
-    shap.dependence_plot(selected_feature, shap_values, X_test)
+    shap.dependence_plot(selected_feature, shap_values, x_test)
     st.pyplot(bbox_inches='tight')
     plt.clf()
+
 
 # Main Streamlit App
 def main():
@@ -249,7 +253,7 @@ def main():
     if page == "Data Visualization":
         data_visualization_page()
     elif page == "Estimation Results":
-        processed_data = pd.read_csv('DataTesla.csv')
+        processed_data = pd.read_csv('datasets/DataTesla.csv')
         xgb_model, lasso_model, pc_regression_model, X_test, y_test = fit_models(processed_data)
         models = {'XGBoost': xgb_model, 'Lasso': lasso_model, 'PC Regression': pc_regression_model}
         estimation_results_page(models, X_test, y_test)
