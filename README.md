@@ -1,66 +1,65 @@
-# Project Overview
+# Présentation du Projet
 
-The project is a comprehensive analysis and forecasting tool for Tesla stock prices. It is structured into three main parts, each contributing to the overall goal of understanding and predicting the stock's behavior.
+Le projet est un outil d'analyse et de prévision complet pour les cours de l'action Tesla. Il est structuré en trois parties principales, chacune contribuant à l'objectif global de comprendre et de prédire le comportement des actions.
 
-## 1. Data Scraping
+## 1. Extraction de Données
 
-In the `Processing` folder, you'll find the initial step of the project, which involves scraping essential data from various sources:
+Dans le dossier `Processing`, vous trouverez la première étape du projet, qui consiste à extraire des données essentielles de différentes sources :
 
-### a. Financial Data
-- **Objective:** Obtain financial data related to Tesla stock, S&P 500 and NASDAQ 100.
-- **Date Range:** 01/01/2021 to 29/12/2022.
-- **Implementation:** Utilizes web scraping techniques to collect crucial financial information.
+### a. Données Financières
+- **Objectif :** Obtenir des données financières relatives aux actions de Tesla, au S&P 500 et au NASDAQ 100.
+- **Plage de Dates :** Du 01/01/2021 au 29/12/2022.
+- **Implémentation :** Utilise des techniques de web scraping pour collecter des informations financières cruciales.
 
-### b. Twitter Data
-- **Objective:** Gather data related to tweets mentioning either Twitter or Elon Musk.
-- **Implementation:** Scrapes Twitter for relevant tweets, providing insights into the social media sentiment surrounding Tesla.
+### b. Données Twitter
+- **Objectif :** Rassembler des données liées aux tweets mentionnant Twitter ou Elon Musk.
+- **Implémentation :** Récupère des tweets pertinents sur Twitter, fournissant des informations sur le sentiment des médias sociaux entourant Tesla.
 
-### c. Tesla Car Deaths Data
-- **Objective:** Collect data about confirmed deaths in Tesla cars.
-- **Implementation:** Extracts information regarding fatalities in Tesla vehicles, contributing to a holistic view of the company's impact.
+### c. Données de Décès en Voiture Tesla
+- **Objectif :** Collecter des données sur les décès confirmés dans les voitures Tesla.
+- **Implémentation :** Extrait des informations sur les décès dans les véhicules Tesla, contribuant à une vision holistique de l'impact de l'entreprise.
 
-## 2. Data Processing
+## 2. Traitement des Données
 
-After collecting the diverse datasets, the project moves to the `Data Processing` stage, where the information is consolidated and structured for further analysis:
+Après la collecte de divers ensembles de données, le projet passe à l'étape de `Traitement des Données`, où les informations sont consolidées et structurées pour une analyse ultérieure :
 
 ### DataTesla.csv
-- **Purpose:** A unified CSV file housing all processed data.
-- **Contents:** Merged financial, Twitter, and Tesla car deaths data for comprehensive analysis.
+- **Objectif :** Un fichier CSV unifié regroupant toutes les données traitées.
+- **Contenu :** Données financières, Twitter et décès en voiture Tesla fusionnées pour une analyse complète.
 
 ## 3. Estimation
 
-In this phase, the project employs various estimation models to understand and predict Tesla stock prices.
+À cette étape, le projet utilise divers modèles d'estimation pour comprendre et prédire les cours des actions de Tesla.
 
-### ModelFitter Class
-A dedicated Python class, `ModelFitter`, has been created to facilitate the testing of multiple predictive models. The class includes several models : OLS, RandomForest, PC Regression, Lasso and XGBoost.
+### Classe ModelFitter
+Une classe Python dédiée, `ModelFitter`, a été créée pour faciliter le test de plusieurs modèles prédictifs. La classe inclut plusieurs modèles tels que OLS, RandomForest, PC Regression, Lasso et XGBoost.
 
+## 4. Visualisation
 
-## 4. Visualization
+Le fichier `dashboard_app.py` se concentre sur la création de représentations visuelles informatives des données :
 
-The file `dashboard_app.py` file focuses on creating insightful and informative visual representations of the data:
+### Tableau de Bord Streamlit
+- **Objectif :** Fournir des visualisations claires pour améliorer la compréhension.
+- **Implémentation :** Utilise Streamlit pour créer et déployer un tableau de bord avec deux pages :
+    - **Page de Visualisation des Données :** Permet aux utilisateurs de sélectionner diverses métriques et de les visualiser.
+    - **Page des Résultats de l'Estimation :** Affiche les résultats de l'estimation à l'aide des modèles définis dans la classe `ModelFitter`.
 
-### Streamlit Dashboard
-- **Objective:** Provide clear visualizations to enhance understanding.
-- **Implementation:** Utilizes Streamlit to create and deploy a dashboard with two pages:
-    - **Data Visualization Page:** Allows users to select various metrics and visualize them.
-    - **Estimation Results Page:** Displays the results of the estimation using models defined in the `ModelFitter` class.
+## Comment Utiliser
 
-## How to Use
+1. **Extraction de Données :**
+   - Accédez au dossier `Processing`.
+   - Exécutez les scripts pertinents pour l'extraction des données financières, des données Twitter et des données de décès en voiture Tesla.
 
-1. **Data Scraping:**
-   - Navigate to the `Processing` folder.
-   - Execute the relevant scripts for financial data, Twitter data, and Tesla car deaths data scraping.
+2. **Traitement des Données :**
+   - Ouvrez le dossier `Processing`.
+   - Exécutez le script de consolidation des données (`ConsolidateData.py` ou similaire).
+   - Localisez le fichier résultant `DataTesla.csv`.
 
-2. **Data Processing:**
-   - Open the `Processing` folder.
-   - Run the script for consolidating data (`ConsolidateData.py` or similar).
-   - Locate the resulting `DataTesla.csv` file.
+3. **Estimation :**
+   - Accédez à la section `Estimation`.
+   - Exécutez les modèles et algorithmes d'estimation (fournissez des instructions spécifiques si nécessaire).
 
-3. **Estimation:**
-   - Access the `Estimation` section.
-   - Execute estimation models and algorithms (provide specific instructions if needed).
-
-4. **Visualization:**
-   - Explore the `Visualization` directory.
-   - Run visualization scripts or notebooks to generate charts and graphs.
+4. **Visualisation :**
+   - Explorez le répertoire `Visualization`.
+   - Exécutez les scripts ou notebooks de visualisation pour générer des graphiques et des diagrammes.
 
