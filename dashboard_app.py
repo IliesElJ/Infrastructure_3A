@@ -159,7 +159,7 @@ def data_visualization_page():
 
 def plot_markdown(metrics, nombre=None):
     a = None
-    if metrics == 'Tesla Stock':
+    if metrics == 'Tesla Stock Price':
         a = "Tesla est un pionnier dans le domaine des véhicules électriques. Chaque avancée technologique, " \
             "chaque nouvelle annonce, peut faire trembler le marché. Tesla ouvre de nouveaux horizons pour " \
             "l'industrie automobile, comme avec le Tesla Semi pour le transport de longue distance. "
@@ -171,7 +171,7 @@ def plot_markdown(metrics, nombre=None):
     elif metrics == 'S&P 500':
         a = "Le S&P500 est un panier d’action contenant les 500 plus grosse capitalisation américaine. Il reflète " \
             "donc l’état de l’économie globale des Etats-Unis. A la différence du NASDAQ le S&P prend en compte un " \
-            "plus large pend de l’économie. "
+            "plus large pans de l’économie. "
 
     elif metrics == 'Oil Price':
         a = "Le prix du pétrole, change constamment et influence profondément le marché des véhicules électriques. " \
