@@ -4,6 +4,7 @@
 
 Le projet est un outil d'analyse et de prévision complet pour les cours de l'action Tesla. Il est structuré en trois parties principales, chacune contribuant à l'objectif global de comprendre et de prédire le comportement des actions.
 
+Le dashboard final est directement accessible sur: [shapontsla](https://shapontesla.streamlit.app/). Des instructions pour Docker sont données en dernière partie.
 ![Diagramme du projet](diagramme.png)
 
 
