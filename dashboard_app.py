@@ -150,7 +150,7 @@ def data_visualization_page():
                                                  name=normalized_metric))
             else:
                 print(f"Skipped {metric} due to zero max value")  # Debug print
-                
+
         st.write(plot_markdown(metric))
         fig_twitter.update_layout(title="Évolution de l'activité Twitter normalisée au fil du temps",
                                   xaxis_title="Date", yaxis_title="Valeur normalisée")
