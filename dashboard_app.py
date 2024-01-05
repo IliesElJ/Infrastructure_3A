@@ -63,6 +63,7 @@ selected_financial_metrics = st.sidebar.multiselect('Sélectionnez les métrique
 st.sidebar.header("Données de décès")
 selected_death_metrics = st.sidebar.multiselect('Sélectionnez les métriques de décès', ['Deaths', 'Deaths Lag 1', 'Deaths Lag 7', 'Deaths Lag 30'])
 
+
 # Sidebar for Twitter data
 st.sidebar.header("Données Twitter")
 selected_twitter_metrics = st.sidebar.multiselect('Sélectionnez les métriques Twitter', ['Tweets of Elon Musk', 'Tweet with mention Tesla', 'Tweet Likes', 'Retweet'])
@@ -81,6 +82,8 @@ def data_visualization_page():
             fig_financial.add_trace(go.Scatter(x=df['Date'], y=df[metric], mode='lines', name=metric))
             fig_financial.update_layout(title=f"Évolution de {metric} au fil du temps", xaxis_title="Date", yaxis_title="Valeur")
             st.plotly_chart(fig_financial)
+            
+            st.write(plot_markdown(metric))
 
     # Deaths and Tweets Normalization and Plotting
     st.title("Évolution des décès et de l'activité Twitter normalisée")
@@ -95,8 +98,10 @@ def data_visualization_page():
             if max_value != 0:
                 normalized_data[normalized_metric] = df[metric] / max_value
                 fig_deaths.add_trace(go.Scatter(x=df['Date'], y=normalized_data[normalized_metric], mode='lines', name=normalized_metric))
+            st.write(plot_markdown(metric))
         fig_deaths.update_layout(title="Évolution des décès normalisés au fil du temps", xaxis_title="Date", yaxis_title="Valeur normalisée")
         st.plotly_chart(fig_deaths)
+        
 
     # Normalize and plot all selected Twitter Metrics
     if selected_twitter_metrics:
@@ -107,8 +112,39 @@ def data_visualization_page():
             if max_value != 0:
                 normalized_data[normalized_metric] = df[metric] / max_value
                 fig_twitter.add_trace(go.Scatter(x=df['Date'], y=normalized_data[normalized_metric], mode='lines', name=normalized_metric))
+            st.write(plot_markdown(metric))
         fig_twitter.update_layout(title="Évolution de l'activité Twitter normalisée au fil du temps", xaxis_title="Date", yaxis_title="Valeur normalisée")
-        st.plotly_chart(fig_twitter)
+        
+        
+
+
+def plot_markdown(metrics):
+    a = None
+    if metrics == 'Tesla Stock':
+        a = "Tesla est un pionnier dans le domaine des véhicules électriques. Chaque avancée technologique, chaque nouvelle annonce, peut faire trembler le marché. Tesla ouvre de nouveaux horizons pour l'industrie automobile, comme avec le Tesla Semi pour le transport de longue distance."
+        return a
+    if metrics == 'NASDAQ Composite':
+        a = "Le NASDAQ, un miroir fidèle de l'économie technologique, reflète les hauts et les bas des entreprises comme Tesla. Les fluctuations du NASDAQ sont un indicateur crucial pour les investisseurs qui scrutent l'avenir de Tesla." 
+    if metrics == 'S&P 500':
+        a = "Le S&P500 est un panier d’action contenant les 500 plus grosse capitalisation américaine. Il reflète donc l’état de l’économie globale des Etats-Unis. A la différence du NASDAQ le S&P prend en compte un plus large pend de l’économie."
+        return a 
+
+    if metrics == 'Oil Price':
+        a = "Le prix du pétrole, change constamment et influence profondément le marché des véhicules électriques. Quand le prix du pétrole monte, l'intérêt pour les véhicules électriques comme ceux de Tesla augmente, et vice versa. Le WTI permet donc de mieux prendre en compte la composante énergétique du prix de l’action Tesla"
+        return a
+    if metrics == 'Deaths Lag 1' or 'Deaths Lag 7' or 'Deaths Lag 30':
+        a = "Ces événements tragiques, souvent sous les projecteurs des médias, éveillent des questions sur la sécurité des technologies de pointe de Tesla, notamment l'Autopilot. Les investisseurs sont toujours attentifs aux risques et peuvent réagir rapidement à ces nouvelles, entraînant des fluctuations parfois significatives du prix de l'action. Ces incidents soulèvent des débats essentiels sur l'avenir de la conduite automatisée et la responsabilité des constructeurs automobiles dans l'ère de l'innovation. Tesla, en tant que leader dans ce domaine, se trouve souvent au centre de ces discussions, ce qui peut affecter la confiance des investisseurs et donc la valorisation boursière de l'entreprise. La manière dont Tesla répond à ces défis, par des améliorations de sécurité et une communication transparente, est donc cruciale pour maintenir la confiance et stabiliser son action en bourse. (Les lag correspondent au nombre de mort pas jour, par semaine et par mois)"
+        return a
+
+        if metrics == 'Tweets of Elon Musk':
+            a = "Chaque tweet d'Elon Musk est comme un levier puissant qui peut soulever ou abaisser le cours de l'action Tesla en un instant. Que ce soit par ses annonces audacieuses, ses réflexions futuristes ou même ses plaisanteries légères, chaque tweet est scruté, analysé, et souvent agit comme un catalyseur sur le marché boursier. Nous avons pu notamment le constaté sur le marché des cryptomonnaies avec le DogeCoin. Cette influence directe et parfois imprévisible d'Elon Musk sur le marché est un facteur crucial pour comprendre et anticiper les mouvements de l'action Tesla."
+        return a
+            
+        if metrics == 'Tweet with mention Tesla' or 'Tweet Likes':
+            a = "Dans le monde numérique d'aujourd'hui, chaque like et retweet d'un tweet concernant Tesla forme une vague qui se propage à travers le marché boursier. Ces interactions numériques sont des baromètres puissants de l'intérêt et de la perception des consommateurs envers Tesla. Une accumulation rapide de likes et de retweets, surtout lorsqu'ils portent sur des innovations, des succès ou des partenariats stratégiques, peut signaler un accroissement de l'enthousiasme et de la confiance envers l'entreprise, influençant positivement le cours de l'action. Inversement, une réaction négative ou mitigée sur les réseaux sociaux, particulièrement en réponse à des controverses ou des défis, peut susciter des inquiétudes chez les investisseurs et peser sur la valeur de l'action. Ces données permettent donc de mieux appréhender les évènements de haute volatilité tout aussi bien que le ressenti de l’opinion public pour Tesla."
+        return a
+        
+    
 
 # Page for Estimation Results
 def estimation_results_page(models, X_test, y_test):
