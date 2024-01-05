@@ -55,7 +55,7 @@ Le fichier `dashboard_app.py` se concentre sur la création de représentations 
 
 2. **Traitement des Données :**
    - Ouvrez le dossier `Processing`.
-   - Exécutez le script de consolidation des données (`ConsolidateData.py` ou similaire).
+   - Exécutez le script de consolidation des données.
    - Localisez le fichier résultant `DataTesla.csv`.
 
 3. **Estimation :**
@@ -63,6 +63,6 @@ Le fichier `dashboard_app.py` se concentre sur la création de représentations 
    - Exécutez les modèles et algorithmes d'estimation (fournissez des instructions spécifiques si nécessaire).
 
 4. **Visualisation :**
-   - Explorez le répertoire `Visualization`.
+   - Executer le fichier `dashboard_app.py`.
    - Exécutez les scripts ou notebooks de visualisation pour générer des graphiques et des diagrammes.
 
